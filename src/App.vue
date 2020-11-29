@@ -28,6 +28,8 @@ export default defineComponent({
   },
   setup(props: Partial<AppProps>) {
     const data: ToRefs<AppData> = toRefs(reactive({
+      // state property becomes `Ref<'state1' | 'state2' | 'state3'>` in 3.0.2,
+      // but it becomes `Ref<'state1'> | Ref<'state2'> | Ref<'state3'>`
       state: 'state1',
     }));
 
@@ -46,6 +48,10 @@ export default defineComponent({
     };
 
     const displayStyle: ToRefs<AppProps> = {
+      // fontSize property has de-aliased type `Ref<number | string>` in 3.0.2,
+      // which accepts an assignment of a `ComputedRef<FontSize>` value since
+      // `type FontSize = number | string` and ComputedRef extends Ref
+      // in 3.0.3 fontSize has incompatible type `Ref<number> | Ref<string>`
       fontSize: computed<FontSize>(() => props.fontSize ?? '24px'),
       fontColor: computed<FontColor>(() => props.fontColor ?? 'blue')
     };
